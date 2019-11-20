@@ -12,11 +12,13 @@ from facultyportal import mongo_setup
 # flask run
 
 db = SQLAlchemy()
-mongo_setup.global_init()
+# mongo_setup.global_init()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
+
+mdb = mongo_setup.MongodbProfile()
 
 mail = Mail()
 

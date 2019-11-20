@@ -1,37 +1,70 @@
-{% extends "layout.html" %} 
-{% block content %}
-  <div class="content-section">
+{% extends "layout.html" %} {% block content %}
+<div class="content-section">
     <div class="media">
-      <img class="rounded-circle account-img" src="{{ image_file }}">
-      <div class="media-body">
-        <h2 class="account-heading">{{ current_user.username }}</h2>
-        <p class="text-secondary">{{ current_user.email }}</p>
-      </div>
-    </div>
-    <!-- FORM HERE -->
-  <h2 class="account-heading">Publications</h2>
-  {% for post in posts.items %}
-    <area class="media content-section">
+        <img class="rounded-circle account-img" src="{{ image_file }}">
         <div class="media-body">
-            <div class="article-metadata">
-                
-            </div>
-            <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
+            <h2 class="account-heading">Dr. {{ current_user.username }}</h2>
+            <p class="text-secondary">{{ current_user.email }}</p>
         </div>
-      </area>
-  {% endfor %}
-  {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-    {% if page_num %}
-        {% if posts.page == page_num %}
-            <a class="btn btn-info mb-4" href="{{ url_for('users.profile', page=page_num) }}"> {{ page_num }} </a>
-        {% else %}
-        <a class="btn btn-outline-info mb-4" href="{{ url_for('users.profile', page=page_num) }}"> {{ page_num }} </a>
-        {% endif %}
-    {% else %}
-        ...
-    {% endif %}
-{% endfor %}
-  </div>
-{% endblock content %}
+    </div>
 
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#"> Professor </a>
+            <small class="text-muted"> IIT Ropar </small>
+        </div>
+    </div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="biography-tab" data-toggle="tab" href="#biography" role="tab" aria-controls="biography" aria-selected="true">Biography</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="publication-tab" data-toggle="tab" href="#publication" role="tab" aria-controls="publication" aria-selected="false">Publications</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="awards-tab" data-toggle="tab" href="#awards" role="tab" aria-controls="awards" aria-selected="false">Awards</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="research-tab" data-toggle="tab" href="#research" role="tab" aria-controls="research" aria-selected="false">Research Interests</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="other-tab" data-toggle="tab" href="#other" role="tab" aria-controls="other" aria-selected="false">Others</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="biography" role="tabpanel" aria-labelledby="biography-tab">
+            <a class="mr-2" href="#"> update biography </a>
+        </div>
+        <div class="tab-pane fade" id="publication" role="tabpanel" aria-labelledby="publication-tab">
+            <a class="mr-2" href="{{ url_for('posts.new_publication') }}"> Add new Publication </a>
+            {% for pubs in profile['pubs'] %} 
+              {% if profile['email'] == current_user.email %}
+                <area class="media content-section">
+                  <div class="media-body">
+                    <div class="article-metadata"></div>
+                    <h2><a class="article-title" href="{{ url_for('posts.post', pubtitle=pubs['title'] ) }}">{{ pubs['title'] }}</a></h2>
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_post') }}?pubtitle={{pubs['title']}}">Update</a>
+
+                    </div>
+                    <p class="article-content">{{ pubs['content'] }}</p>
+                  </div>
+                </area>
+              {% endif %} 
+            {% endfor %}
+        </div>
+        <div class="tab-pane fade" id="awards" role="tabpanel" aria-labelledby="awards-tab">
+            <a class="mr-2" href="#"> Add a new Award </a>
+        </div>
+        <div class="tab-pane fade" id="research" role="tabpanel" aria-labelledby="research-tab">
+            <a class="mr-2" href="#"> Add new research interest </a>
+        </div>
+        <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="other-tab">
+            <a class="mr-2" href="#"> Add new field </a>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+{% endblock content %}

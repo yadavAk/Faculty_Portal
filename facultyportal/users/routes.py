@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
-from facultyportal import db, bcrypt
+from facultyportal import db, bcrypt, mdb
 from facultyportal.models import User, Post
 from facultyportal.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                    RequestResetForm, ResetPasswordForm)
@@ -19,6 +19,7 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
+        mdb.createProfile(form.email.data)
         flash('Your account has been created! You can login now', 'success')
         return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
@@ -77,8 +78,9 @@ def profile():
         form.username.data = current_user.username
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    profile = mdb.getProfile(current_user.email)
     return render_template('profile.html', title='Profile', 
-                    image_file=image_file, form=form, posts=posts)
+                    image_file=image_file, form=form, posts=posts, profile=profile)
 
 
 @users.route("/user/<string:username>")
