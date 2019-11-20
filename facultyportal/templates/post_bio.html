@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<area class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+        </div>
+        <h2><a class="article-title" href="#">{{ post['bio']['title'] }}</a></h2>
+        <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_bio') }}?biotitle={{title}}">Update</a>
+        </div>
+        <p class="article-content">{{ post['bio']['content'] }}</p>
+    </div>
+</area>
+
+{% endblock content %}

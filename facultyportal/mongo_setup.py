@@ -34,11 +34,16 @@ class MongodbProfile:
     def getProfile(self, email):
         return self.mycol.find_one({'email':email})
 
-    def updateBio(self, email, bio):
-        myquery = { "email": email }
-        newvalues = { "$set": { "bio": bio } }
+    def updateBio(self, email, title, content):
+        myquery = { "email": email}
+        newvalues = { "$set": { "bio": {'title':title, "content": content } }}
 
         self.mycol.update_one(myquery, newvalues)
+
+    def getBio(self, email, title):
+        return self.mycol.find_one({'email':email},
+                {'_id':0, 'bio': 1})
+
 
     def addPublication(self, email, title, content):
         myquery = { "email": email }
@@ -46,8 +51,8 @@ class MongodbProfile:
 
         self.mycol.update_one(myquery, newvalues)
 
-    def updatePublication(self, email, title, content):
-        myquery = { "email": email, 'pubs.title': title }
+    def updatePublication(self, email, old_title, title, content):
+        myquery = { "email": email, 'pubs.title': old_title }
         newvalues = { "$set": { "pubs.$.title": title, "pubs.$.content": content } }
 
         self.mycol.update_one(myquery, newvalues)
@@ -59,5 +64,50 @@ class MongodbProfile:
     def deletePublication(self, email, title):
         myquery = { "email": email }
         newvalues = { "$pull": { "pubs": {'title':title} } }
+
+        self.mycol.update_one(myquery, newvalues)
+    
+    def addAward(self, email, title, content):
+        myquery = { "email": email }
+        newvalues = { "$push": { "award": {'title':title, 'content':content} } }
+
+        self.mycol.update_one(myquery, newvalues)
+
+    def updateAward(self, email, old_title, title, content):
+        myquery = { "email": email, 'award.title': old_title }
+        newvalues = { "$set": { "award.$.title": title, "award.$.content": content } }
+
+        self.mycol.update_one(myquery, newvalues)
+
+    def getAward(self, email, title):
+        return self.mycol.find_one({'email':email},
+                {'_id':0, 'award': {'$elemMatch':{'title':title}}})
+
+    def deleteAward(self, email, title):
+        myquery = { "email": email }
+        newvalues = { "$pull": { "award": {'title':title} } }
+
+        self.mycol.update_one(myquery, newvalues)
+
+
+    def addOther(self, email, title, content):
+        myquery = { "email": email }
+        newvalues = { "$push": { "other": {'title':title, 'content':content} } }
+
+        self.mycol.update_one(myquery, newvalues)
+
+    def updateOther(self, email, old_title, title, content):
+        myquery = { "email": email, 'other.title': old_title }
+        newvalues = { "$set": { "other.$.title": title, "other.$.content": content } }
+
+        self.mycol.update_one(myquery, newvalues)
+
+    def getOther(self, email, title):
+        return self.mycol.find_one({'email':email},
+                {'_id':0, 'other': {'$elemMatch':{'title':title}}})
+
+    def deleteOther(self, email, title):
+        myquery = { "email": email }
+        newvalues = { "$pull": { "other": {'title':title} } }
 
         self.mycol.update_one(myquery, newvalues)

@@ -25,20 +25,28 @@
             <a class="nav-link" id="awards-tab" data-toggle="tab" href="#awards" role="tab" aria-controls="awards" aria-selected="false">Awards</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="research-tab" data-toggle="tab" href="#research" role="tab" aria-controls="research" aria-selected="false">Research Interests</a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" id="other-tab" data-toggle="tab" href="#other" role="tab" aria-controls="other" aria-selected="false">Others</a>
         </li>
     </ul>
 
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="biography" role="tabpanel" aria-labelledby="biography-tab">
-            <a class="mr-2" href="#"> update biography </a>
+            <a class="mr-2" href="{{ url_for('posts.update_bio') }}"> Update Biography </a>
+                <area class="media content-section">
+                  <div class="media-body">
+                    <div class="article-metadata"></div>
+                    <h2><a class="article-title" href="{{ url_for('posts.post_bio', biotitle=profile['bio']['title'] ) }}">{{ profile['bio']['title'] }}</a></h2>
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_bio') }}?biotitle={{profile['bio']['title']}}">Update</a>
+
+                    </div>
+                    <p class="article-content">{{ profile['bio']['content'] }}</p>
+                  </div>
+                </area>
         </div>
         <div class="tab-pane fade" id="publication" role="tabpanel" aria-labelledby="publication-tab">
             <a class="mr-2" href="{{ url_for('posts.new_publication') }}"> Add new Publication </a>
-            {% for pubs in profile['pubs'] %} 
+            {% for pubs in profile['pubs'] %}
               {% if profile['email'] == current_user.email %}
                 <area class="media content-section">
                   <div class="media-body">
@@ -55,13 +63,40 @@
             {% endfor %}
         </div>
         <div class="tab-pane fade" id="awards" role="tabpanel" aria-labelledby="awards-tab">
-            <a class="mr-2" href="#"> Add a new Award </a>
-        </div>
-        <div class="tab-pane fade" id="research" role="tabpanel" aria-labelledby="research-tab">
-            <a class="mr-2" href="#"> Add new research interest </a>
+            <a class="mr-2" href="{{ url_for('posts.new_award') }}"> Add a new Award </a>
+            {% for award in profile['award'] %}
+              {% if profile['email'] == current_user.email %}
+                <area class="media content-section">
+                  <div class="media-body">
+                    <div class="article-metadata"></div>
+                    <h2><a class="article-title" href="{{ url_for('posts.post_award', awardtitle=award['title'] ) }}">{{ award['title'] }}</a></h2>
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_award') }}?awardtitle={{award['title']}}">Update</a>
+
+                    </div>
+                    <p class="article-content">{{ award['content'] }}</p>
+                  </div>
+                </area>
+              {% endif %} 
+            {% endfor %}
         </div>
         <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="other-tab">
-            <a class="mr-2" href="#"> Add new field </a>
+            <a class="mr-2" href="{{ url_for('posts.new_other') }}"> Add new field </a>
+            {% for other in profile['other'] %} 
+              {% if profile['email'] == current_user.email %}
+                <area class="media content-section">
+                  <div class="media-body">
+                    <div class="article-metadata"></div>
+                    <h2><a class="article-title" href="{{ url_for('posts.post_other', othertitle=other['title'] ) }}">{{ other['title'] }}</a></h2>
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_other') }}?othertitle={{other['title']}}">Update</a>
+
+                    </div>
+                    <p class="article-content">{{ other['content'] }}</p>
+                  </div>
+                </area>
+              {% endif %} 
+            {% endfor %}
         </div>
     </div>
 </div>
